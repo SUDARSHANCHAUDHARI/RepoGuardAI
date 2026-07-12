@@ -50,6 +50,8 @@ export interface ScannerDef {
   appliesTo: (discovery: Discovery) => boolean;
   /** Which audit toggle gates this scanner. */
   gate: "security" | "dependencies";
+  /** Extra args derived from config (e.g. passing excludes to the tool). */
+  extraArgs?: (config: RepoGuardConfig) => string[];
   /** Human description shown in reports. */
   description: string;
 }

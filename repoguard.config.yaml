@@ -26,6 +26,7 @@ exclude:
   - coverage
   - vendor
   - .git
+  - .claude
 
 report:
   formats:

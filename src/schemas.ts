@@ -196,7 +196,7 @@ export const configSchema = z.object({
     .default({ modifyFiles: false, validateFindings: true, minimumConfidence: 75 }),
   exclude: z
     .array(z.string())
-    .default(["node_modules", "dist", "build", "coverage", "vendor", ".git"]),
+    .default(["node_modules", "dist", "build", "coverage", "vendor", ".git", ".claude"]),
   report: z
     .object({
       formats: z.array(reportFormatSchema).default(["markdown", "json", "sarif"]),

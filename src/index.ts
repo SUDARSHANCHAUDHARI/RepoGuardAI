@@ -9,6 +9,7 @@ export {
   runScanners,
 } from "./scanner-runner.js";
 export { collectEvidence } from "./evidence-collector.js";
+export { parseScannerFindings, PARSEABLE_TOOLS } from "./scanner-parsers.js";
 export { generateInstructions } from "./agent-instructions.js";
 export {
   buildAuditReport,

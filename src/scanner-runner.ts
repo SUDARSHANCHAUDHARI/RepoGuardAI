@@ -1,6 +1,7 @@
 import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import { walkExcludes } from "./config.js";
 import { scanReportSchema } from "./schemas.js";
 import type {
   Discovery,
@@ -33,6 +34,7 @@ export const SCANNERS: ScannerDef[] = [
     args: ["scan", "--config", "auto", "--json", "--quiet"],
     appliesTo: () => true,
     gate: "security",
+    extraArgs: (c) => walkExcludes(c).flatMap((d) => ["--exclude", d]),
     description: "Static analysis for security and correctness patterns.",
   },
   {
@@ -42,6 +44,7 @@ export const SCANNERS: ScannerDef[] = [
     args: ["fs", "--scanners", "vuln,secret,misconfig", "--format", "json", "."],
     appliesTo: () => true,
     gate: "security",
+    extraArgs: (c) => walkExcludes(c).flatMap((d) => ["--skip-dirs", `**/${d}`]),
     description: "Filesystem vulnerability, secret and misconfiguration scan.",
   },
   {
@@ -148,7 +151,8 @@ export function runScanners(
   const results: ScanResult[] = [];
 
   for (const def of SCANNERS) {
-    const command = `${def.bin} ${def.args.join(" ")}`;
+    const runArgs = [...def.args, ...(def.extraArgs?.(config) ?? [])];
+    const command = `${def.bin} ${runArgs.join(" ")}`;
     const base = {
       tool: def.name,
       available: false,
@@ -194,7 +198,7 @@ export function runScanners(
     const started = Date.now();
     let run: ReturnType<typeof spawnSync>;
     try {
-      run = spawnSync(def.bin, def.args, {
+      run = spawnSync(def.bin, runArgs, {
         cwd: repoRoot,
         encoding: "utf8",
         timeout: config.scanners.timeoutMs,

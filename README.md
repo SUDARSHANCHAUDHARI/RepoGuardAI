@@ -374,8 +374,9 @@ Extend the design without touching unrelated code:
 
 ## Roadmap
 
-- Parse scanner JSON (gitleaks/osv/npm-audit) into structured seed findings.
-- Route extractors for Python / Go / Rust / Java frameworks.
+- ✅ Parse external scanner JSON (semgrep, gitleaks, npm/pnpm audit, osv-scanner,
+  trivy) into structured seed findings.
+- Route extractors for Python / Go / Rust / Java frameworks (currently Node only).
 - Packaged GitHub Action + `--fail-on <severity>` exit gate.
 - Config-declared custom scanners without code changes.
 - Diff-only audit mode for pull requests.

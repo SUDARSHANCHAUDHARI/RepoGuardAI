@@ -75,6 +75,22 @@ describe("discover", () => {
     expect(files.some((f) => f.includes("node_modules"))).toBe(false);
   });
 
+  it("infers npm from package.json when no lockfile is present", () => {
+    const root = repo({ "package.json": JSON.stringify({ name: "x" }) });
+    const d = discover(root, defaultConfig());
+    expect(d.packageManagers).toContain("npm");
+  });
+
+  it("does not add npm when a pnpm lockfile is present", () => {
+    const root = repo({
+      "package.json": JSON.stringify({ name: "x" }),
+      "pnpm-lock.yaml": "lockfileVersion: '9.0'\n",
+    });
+    const d = discover(root, defaultConfig());
+    expect(d.packageManagers).toContain("pnpm");
+    expect(d.packageManagers).not.toContain("npm");
+  });
+
   it("detects databases and integrations from dependencies", () => {
     const root = repo({
       "package.json": JSON.stringify({

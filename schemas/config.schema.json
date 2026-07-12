@@ -44,7 +44,7 @@
     "exclude": {
       "type": "array",
       "items": { "type": "string" },
-      "default": ["node_modules", "dist", "build", "coverage", "vendor", ".git"]
+      "default": ["node_modules", "dist", "build", "coverage", "vendor", ".git", ".claude"]
     },
     "report": {
       "type": "object",

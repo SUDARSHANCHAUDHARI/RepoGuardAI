@@ -207,6 +207,11 @@ function detectPackageManagers(files: string[]): string[] {
     const pm = PACKAGE_MANAGER_BY_FILE[basename(f)];
     if (pm) managers.add(pm);
   }
+  // A package.json with no JS lockfile still implies npm (its default manager),
+  // so dependency scanners like `npm audit` become applicable.
+  const hasPackageJson = files.some((f) => basename(f) === "package.json");
+  const hasJsManager = ["npm", "pnpm", "yarn", "bun"].some((m) => managers.has(m));
+  if (hasPackageJson && !hasJsManager) managers.add("npm");
   return [...managers].sort();
 }
 
