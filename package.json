@@ -25,6 +25,10 @@
   "engines": {
     "node": ">=18"
   },
+  "packageManager": "pnpm@10.28.2",
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  },
   "scripts": {
     "build": "tsup",
     "dev": "tsx src/cli.ts",
