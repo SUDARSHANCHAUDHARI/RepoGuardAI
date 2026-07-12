@@ -196,7 +196,28 @@ export const configSchema = z.object({
     .default({ modifyFiles: false, validateFindings: true, minimumConfidence: 75 }),
   exclude: z
     .array(z.string())
-    .default(["node_modules", "dist", "build", "coverage", "vendor", ".git", ".claude"]),
+    .default([
+      "node_modules",
+      "dist",
+      "build",
+      "out",
+      "coverage",
+      "vendor",
+      ".git",
+      ".claude",
+      ".venv",
+      "venv",
+      "__pycache__",
+      ".tox",
+      ".next",
+      ".nuxt",
+      "target",
+      ".gradle",
+      "Pods",
+      "DerivedData",
+      ".idea",
+      ".cache",
+    ]),
   report: z
     .object({
       formats: z.array(reportFormatSchema).default(["markdown", "json", "sarif"]),

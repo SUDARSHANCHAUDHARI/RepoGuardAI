@@ -44,7 +44,7 @@
     "exclude": {
       "type": "array",
       "items": { "type": "string" },
-      "default": ["node_modules", "dist", "build", "coverage", "vendor", ".git", ".claude"]
+      "default": ["node_modules", "dist", "build", "out", "coverage", "vendor", ".git", ".claude", ".venv", "venv", "__pycache__", ".tox", ".next", ".nuxt", "target", ".gradle", "Pods", "DerivedData", ".idea", ".cache"]
     },
     "report": {
       "type": "object",
