@@ -11,9 +11,10 @@
 # run shell commands), edits are auto-accepted, and spend is capped per repo.
 #
 # Usage:
+#   cd /path/to/repo && claude-deep-pass.sh     # audit the current repo
 #   ./claude-deep-pass.sh /path/to/repo [/path/to/repo2 ...]
-#   ./claude-deep-pass.sh --criticals        # auto-pick repos with >=1 critical
-#                                              # from the latest portfolio rollup
+#   ./claude-deep-pass.sh --criticals           # auto-pick repos with >=1 critical
+#                                                 # from the latest portfolio rollup
 # Env:
 #   BUDGET=0.75   per-repo USD cap (default 0.75)
 
@@ -38,11 +39,24 @@ if [ "${1:-}" = "--criticals" ]; then
     crit="${sev%%/*}"
     [ "${crit:-0}" -gt 0 ] 2>/dev/null && [ -d "$ROOT/$cat/$repo" ] && repos+=("$ROOT/$cat/$repo")
   done < <(grep -E '^\| [A-Za-z]' "$rollup" | grep -vE 'Category')
-else
+elif [ "$#" -gt 0 ]; then
   repos=("$@")
+elif [ -d .git ] || [ -f package.json ] || [ -d repoguard-results ]; then
+  # No args: default to the current directory when it looks like a repo.
+  repos=("$PWD")
 fi
 
-[ ${#repos[@]} -eq 0 ] && { echo "No repos to process."; exit 1; }
+[ ${#repos[@]} -eq 0 ] && {
+  echo "No repos to process. Run inside a repo, pass repo paths, or use --criticals."
+  exit 1
+}
+
+# Normalize to absolute paths so `.` / relative args work from anywhere.
+resolved=()
+for r in "${repos[@]}"; do
+  if d="$(cd "$r" 2>/dev/null && pwd)"; then resolved+=("$d"); else echo "skip (not a dir): $r"; fi
+done
+repos=("${resolved[@]}")
 echo "Deep-pass on ${#repos[@]} repo(s), budget \$$BUDGET each."
 echo
 
