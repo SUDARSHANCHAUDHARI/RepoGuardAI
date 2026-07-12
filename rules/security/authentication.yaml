@@ -1,0 +1,43 @@
+pack: authentication
+category: authentication
+description: >-
+  Verify that identity is established correctly and cannot be forged or
+  bypassed. Every check requires code evidence (file:line) before a finding is
+  raised above "potential".
+checks:
+  - id: AUTHN-001
+    title: Protected routes verify identity on every request
+    guidance: >-
+      Confirm each non-public route resolves an authenticated principal
+      server-side. Flag routes reachable without a valid session/token.
+    severity: high
+  - id: AUTHN-002
+    title: Passwords stored with a strong salted hash
+    guidance: >-
+      Require bcrypt/scrypt/argon2. Reject plaintext, unsalted, or fast hashes
+      (MD5/SHA1/SHA256 without a KDF).
+    severity: critical
+  - id: AUTHN-003
+    title: JWT signature verified and algorithm pinned
+    guidance: >-
+      Verify signatures on every request. Reject `alg:none`, algorithm
+      confusion (HS/RS), weak secrets, and missing expiry.
+    severity: high
+  - id: AUTHN-004
+    title: Sessions/tokens expire, rotate, and can be revoked
+    guidance: >-
+      Check lifetime, rotation on privilege change, and invalidation on logout
+      and password reset.
+    severity: medium
+  - id: AUTHN-005
+    title: MFA/OTP flows are replay-safe and single-use
+    guidance: >-
+      OTPs must be time-bound, single-use, and rate limited. See the
+      rate-limiting pack for abuse protection.
+    severity: high
+  - id: AUTHN-006
+    title: Account recovery does not enable enumeration or takeover
+    guidance: >-
+      Reset tokens must be high-entropy, expiring, single-use, and responses
+      must not reveal whether an account exists.
+    severity: high

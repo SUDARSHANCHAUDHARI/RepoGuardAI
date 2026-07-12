@@ -1,0 +1,32 @@
+pack: error-handling
+category: bug
+description: >-
+  Verify errors are caught, propagated, and surfaced correctly without
+  swallowing failures or corrupting state.
+checks:
+  - id: EH-001
+    title: No silently swallowed errors
+    guidance: Flag empty catch blocks and ignored rejected promises.
+    severity: medium
+  - id: EH-002
+    title: Async errors awaited and handled
+    guidance: >-
+      Flag missing `await`, unhandled promise rejections, and fire-and-forget
+      calls with side effects.
+    severity: medium
+  - id: EH-003
+    title: Correct error mapping to responses/states
+    guidance: >-
+      Flag errors mapped to wrong status/state, or user-facing messages that
+      hide actionable failures.
+    severity: low
+  - id: EH-004
+    title: Cleanup on failure paths
+    guidance: >-
+      Confirm resources are released and transactions rolled back on error.
+      See race-conditions pack.
+    severity: medium
+  - id: EH-005
+    title: Retries are bounded and safe
+    guidance: Flag unbounded retries or retries of non-idempotent operations.
+    severity: low

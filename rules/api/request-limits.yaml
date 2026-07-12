@@ -1,0 +1,34 @@
+pack: request-limits
+category: api-security
+description: >-
+  Verify that requests cannot exhaust server resources through unbounded body
+  size, payloads, or slow connections.
+checks:
+  - id: REQ-001
+    title: Request body size limit enforced
+    guidance: >-
+      Confirm a maximum body size at the server/framework level. Flag unbounded
+      body parsers.
+    severity: medium
+  - id: REQ-002
+    title: File upload size limits enforced
+    guidance: >-
+      Confirm per-file and total-request upload caps. See file-upload pack.
+    severity: medium
+  - id: REQ-003
+    title: Array/collection input length bounded
+    guidance: >-
+      Flag endpoints accepting arrays/batches without a maximum element count.
+    severity: medium
+  - id: REQ-004
+    title: Timeouts on inbound and outbound requests
+    guidance: >-
+      Confirm server request timeouts and timeouts on outbound calls to avoid
+      hanging connections and resource pinning.
+    severity: medium
+  - id: REQ-005
+    title: JSON depth / complexity bounded
+    guidance: >-
+      Flag parsers accepting arbitrarily nested JSON that can cause CPU/memory
+      blowups.
+    severity: low

@@ -1,0 +1,35 @@
+pack: file-upload
+category: security
+description: >-
+  Verify that file upload and file-serving paths cannot be used to execute
+  code, exhaust resources, or traverse the filesystem.
+checks:
+  - id: UP-001
+    title: Upload content type and extension validated (allowlist)
+    guidance: >-
+      Require an allowlist of types validated by content, not just the
+      client-supplied name/MIME.
+    severity: high
+  - id: UP-002
+    title: Upload size limits enforced
+    guidance: >-
+      Confirm per-file and per-request size limits to prevent resource
+      exhaustion. See request-limits pack.
+    severity: medium
+  - id: UP-003
+    title: Stored files are not executable and served safely
+    guidance: >-
+      Uploads must not land in an executable path or be served with a
+      dangerous content type. Randomize stored names.
+    severity: high
+  - id: UP-004
+    title: Path traversal prevented in file paths
+    guidance: >-
+      Flag user-controlled path segments joined into filesystem paths without
+      normalization/allowlisting. See sensitive-data and injection packs.
+    severity: high
+  - id: UP-005
+    title: Upload endpoints are rate limited
+    guidance: >-
+      Confirm abuse protection on upload routes. See rate-limiting pack.
+    severity: medium

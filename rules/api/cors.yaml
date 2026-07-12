@@ -1,0 +1,31 @@
+pack: cors
+category: api-security
+description: >-
+  Verify Cross-Origin Resource Sharing configuration does not expose
+  authenticated endpoints to untrusted origins.
+checks:
+  - id: CORS-001
+    title: No wildcard origin with credentials
+    guidance: >-
+      Flag `Access-Control-Allow-Origin: *` combined with
+      `Allow-Credentials: true`, or reflecting arbitrary Origin with
+      credentials.
+    severity: high
+  - id: CORS-002
+    title: Origin allowlist is explicit
+    guidance: >-
+      Confirm allowed origins are an explicit list, not reflected from the
+      request without validation.
+    severity: medium
+  - id: CORS-003
+    title: Allowed methods/headers are minimal
+    guidance: >-
+      Flag overly permissive method/header allowances beyond what the API
+      needs.
+    severity: low
+  - id: CORS-004
+    title: CSRF protection where cookies authenticate requests
+    guidance: >-
+      For cookie-based auth, confirm CSRF tokens or SameSite protections on
+      state-changing routes.
+    severity: high

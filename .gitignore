@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+*.tsbuildinfo
+
+# Test / coverage
+coverage/
+
+# RepoGuard runtime output (generated inside audited repos)
+.repoguard/
+repoguard-results/
+
+# Editor / OS / agent
+.DS_Store
+.idea/
+.vscode/
+.claude/
+*.log
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+local.properties
+*.jks
+*.keystore

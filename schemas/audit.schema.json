@@ -1,0 +1,89 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://repoguard.ai/schemas/audit.schema.json",
+  "title": "RepoGuard Audit Report",
+  "description": "The combined audit report written to <outputDirectory>/audit-report.json. Mirrors src/schemas.ts (Zod).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["repository", "generatedAt", "discovery", "scans", "findings", "limitations"],
+  "properties": {
+    "repository": { "type": "string" },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "discovery": {
+      "type": "object",
+      "required": ["repository", "generatedAt", "fileCount"],
+      "properties": {
+        "repository": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "fileCount": { "type": "integer", "minimum": 0 },
+        "languages": { "type": "array", "items": { "type": "string" } },
+        "frameworks": { "type": "array", "items": { "type": "string" } },
+        "packageManagers": { "type": "array", "items": { "type": "string" } },
+        "dependencyFiles": { "type": "array", "items": { "type": "string" } },
+        "apiFrameworks": { "type": "array", "items": { "type": "string" } },
+        "testFrameworks": { "type": "array", "items": { "type": "string" } },
+        "databases": { "type": "array", "items": { "type": "string" } },
+        "integrations": { "type": "array", "items": { "type": "string" } },
+        "ciWorkflows": { "type": "array", "items": { "type": "string" } },
+        "infraFiles": { "type": "array", "items": { "type": "string" } },
+        "authFiles": { "type": "array", "items": { "type": "string" } },
+        "configFiles": { "type": "array", "items": { "type": "string" } },
+        "apiEndpoints": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["method", "path", "file", "line"],
+            "properties": {
+              "method": { "type": "string" },
+              "path": { "type": "string" },
+              "file": { "type": "string" },
+              "line": { "type": "integer", "minimum": 1 }
+            }
+          }
+        }
+      }
+    },
+    "scans": {
+      "type": "object",
+      "required": ["repository", "generatedAt", "results"],
+      "properties": {
+        "repository": { "type": "string" },
+        "generatedAt": { "type": "string" },
+        "results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["tool", "available", "status", "command"],
+            "properties": {
+              "tool": { "type": "string" },
+              "available": { "type": "boolean" },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "completed",
+                  "skipped-unavailable",
+                  "skipped-not-applicable",
+                  "skipped-disabled",
+                  "error",
+                  "timeout"
+                ]
+              },
+              "command": { "type": "string" },
+              "exitCode": { "type": ["integer", "null"] },
+              "durationMs": { "type": "number", "minimum": 0 },
+              "stdoutFile": { "type": ["string", "null"] },
+              "stderrFile": { "type": ["string", "null"] },
+              "note": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "apiInventory": { "type": "array", "items": { "type": "object" } },
+    "findings": {
+      "type": "array",
+      "items": { "$ref": "finding.schema.json" }
+    },
+    "limitations": { "type": "array", "items": { "type": "string" } }
+  }
+}

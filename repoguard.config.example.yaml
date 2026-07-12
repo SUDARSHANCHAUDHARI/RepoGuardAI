@@ -1,0 +1,46 @@
+# RepoGuardAI configuration (optional).
+# Copy to `repoguard.config.yaml` in the repo you audit and adjust as needed.
+# Every key is optional; omitted keys fall back to the defaults shown here.
+# See schemas/config.schema.json for the full schema.
+
+project:
+  name: auto            # "auto" derives from the repo; or set a fixed name
+  repository: .
+
+audit:
+  bugs: true
+  security: true
+  apiSecurity: true
+  rateLimiting: true
+  dependencies: true
+  configuration: true
+  tests: true
+
+mode:
+  modifyFiles: false          # RepoGuard never edits files unless this is true
+  validateFindings: true
+  minimumConfidence: 75       # `repoguard validate` reclassifies low-confidence potentials
+
+exclude:
+  - node_modules
+  - dist
+  - build
+  - coverage
+  - vendor
+  - .git
+
+report:
+  formats:
+    - markdown
+    - json
+    - sarif
+  outputDirectory: repoguard-results
+
+# Optional extensions (not required by the spec, sensible defaults shown):
+scanners:
+  disabled: []                # e.g. [semgrep, trivy] to skip specific tools
+  timeoutMs: 120000           # per-scanner timeout
+
+discovery:
+  maxFiles: 200000            # safety cap for huge monorepos
+  maxEndpointScanFiles: 5000  # cap on files scanned for API routes

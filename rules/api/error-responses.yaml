@@ -1,0 +1,30 @@
+pack: error-responses
+category: api-security
+description: >-
+  Verify that error handling does not leak internals and behaves consistently
+  under failure.
+checks:
+  - id: ERR-001
+    title: No stack traces or internal details in responses
+    guidance: >-
+      Flag handlers returning raw errors, stack traces, SQL errors, or file
+      paths to clients. See sensitive-data pack.
+    severity: medium
+  - id: ERR-002
+    title: Consistent error shape and status codes
+    guidance: >-
+      Confirm a consistent error contract; flag 200 responses that actually
+      represent errors, or inconsistent codes that hide failures.
+    severity: low
+  - id: ERR-003
+    title: No user enumeration via differential errors/timing
+    guidance: >-
+      Flag auth/reset flows whose error text or timing reveals whether an
+      account exists.
+    severity: medium
+  - id: ERR-004
+    title: Errors do not leave the system in an inconsistent state
+    guidance: >-
+      Confirm partial failures roll back or compensate (see quality
+      error-handling and race-conditions packs).
+    severity: medium

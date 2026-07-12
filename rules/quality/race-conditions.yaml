@@ -1,0 +1,34 @@
+pack: race-conditions
+category: bug
+description: >-
+  Concurrency defects where interleaved execution produces incorrect results,
+  double effects, or security bypasses.
+checks:
+  - id: RACE-001
+    title: Check-then-act on shared state
+    guidance: >-
+      Flag read-decide-write sequences (e.g. balance/quota/stock, uniqueness
+      checks) without atomicity or locking.
+    severity: high
+  - id: RACE-002
+    title: Non-atomic financial or inventory updates
+    guidance: >-
+      Require atomic DB operations/transactions for money and counters. Flag
+      application-side increments.
+    severity: high
+  - id: RACE-003
+    title: TOCTOU in authorization or file access
+    guidance: >-
+      Flag time-of-check/time-of-use gaps between permission checks and the
+      protected action.
+    severity: high
+  - id: RACE-004
+    title: Idempotency for retried operations
+    guidance: >-
+      Flag payment/webhook/side-effect handlers lacking idempotency keys,
+      allowing duplicate effects.
+    severity: medium
+  - id: RACE-005
+    title: Shared mutable state without synchronization
+    guidance: Flag module-level mutable state mutated by concurrent requests.
+    severity: medium

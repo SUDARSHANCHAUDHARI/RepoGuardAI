@@ -1,0 +1,34 @@
+pack: sensitive-data
+category: security
+description: >-
+  Verify that sensitive data is protected in transit, at rest, and in
+  responses, and that server-side requests cannot be abused.
+checks:
+  - id: DATA-001
+    title: No sensitive fields over-exposed in responses
+    guidance: >-
+      Flag responses returning password hashes, tokens, internal ids, or PII
+      not required by the caller (over-fetching / serializer leaks).
+    severity: high
+  - id: DATA-002
+    title: PII/secrets encrypted at rest where required
+    guidance: >-
+      Confirm sensitive columns/fields are encrypted or tokenized per policy.
+    severity: medium
+  - id: DATA-003
+    title: No information leakage in errors
+    guidance: >-
+      Flag stack traces, SQL errors, internal paths, or version banners
+      returned to clients. See api/error-responses pack.
+    severity: medium
+  - id: DATA-004
+    title: SSRF protection on server-side fetches
+    guidance: >-
+      Flag outbound requests to user-supplied URLs without allowlisting and
+      metadata-endpoint blocking (169.254.169.254, localhost).
+    severity: high
+  - id: DATA-005
+    title: Safe redirects (no open redirect)
+    guidance: >-
+      Flag redirects to user-controlled destinations without an allowlist.
+    severity: medium

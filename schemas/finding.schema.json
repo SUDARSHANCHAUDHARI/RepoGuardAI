@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://repoguard.ai/schemas/finding.schema.json",
+  "title": "RepoGuard Finding",
+  "description": "A single audit finding. The canonical runtime definition lives in src/schemas.ts (Zod); this JSON Schema mirrors it for external tooling and agents.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["id", "title", "severity", "category", "status", "confidence"],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^RG-[A-Z]+-\\d{3,}$",
+      "description": "Stable identifier, e.g. RG-AUTH-001."
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "informational"]
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "bug",
+        "security",
+        "api-security",
+        "authentication",
+        "authorization",
+        "rate-limiting",
+        "dependency",
+        "configuration",
+        "secrets",
+        "test-coverage",
+        "other"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": ["confirmed", "potential", "manual-verification", "rejected"]
+    },
+    "confidence": { "type": "integer", "minimum": 0, "maximum": 100 },
+    "file": { "type": ["string", "null"], "default": null },
+    "line": { "type": ["integer", "null"], "minimum": 1, "default": null },
+    "endpoint": { "type": ["string", "null"], "default": null },
+    "description": { "type": "string", "default": "" },
+    "evidence": { "type": "string", "default": "" },
+    "impact": { "type": "string", "default": "" },
+    "triggerCondition": { "type": "string", "default": "" },
+    "reproduction": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "recommendedFix": { "type": "string", "default": "" },
+    "source": {
+      "type": "string",
+      "default": "manual",
+      "description": "Provenance, e.g. manual, scanner:secrets, tool:gitleaks."
+    }
+  }
+}

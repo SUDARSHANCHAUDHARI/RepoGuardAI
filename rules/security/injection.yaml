@@ -1,0 +1,41 @@
+pack: injection
+category: security
+description: >-
+  Detect places where untrusted input reaches an interpreter without safe
+  parameterization or escaping.
+checks:
+  - id: INJ-001
+    title: SQL/NoSQL injection
+    guidance: >-
+      Require parameterized queries / prepared statements / query builders.
+      Flag string-concatenated SQL and unsanitized Mongo query objects.
+    severity: critical
+  - id: INJ-002
+    title: OS command injection
+    guidance: >-
+      Flag shell execution built from user input (exec, system, spawn with a
+      shell). Require argument arrays and allowlists.
+    severity: critical
+  - id: INJ-003
+    title: Template / SSTI injection
+    guidance: >-
+      Flag user input rendered into server-side templates or eval-like APIs.
+    severity: high
+  - id: INJ-004
+    title: Cross-site scripting (XSS)
+    guidance: >-
+      Flag unescaped user input in HTML sinks (innerHTML, dangerouslySetInnerHTML,
+      unescaped template output).
+    severity: high
+  - id: INJ-005
+    title: Insecure deserialization
+    guidance: >-
+      Flag deserialization of untrusted data with types that permit gadget
+      execution.
+    severity: high
+  - id: INJ-006
+    title: LDAP / XPath / header injection
+    guidance: >-
+      Flag untrusted input concatenated into LDAP filters, XPath expressions,
+      or response headers (CRLF).
+    severity: medium

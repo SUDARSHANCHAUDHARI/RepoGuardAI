@@ -1,0 +1,29 @@
+pack: pagination
+category: api-security
+description: >-
+  Verify that list endpoints cannot return unbounded data and cannot leak data
+  across authorization boundaries via pagination parameters.
+checks:
+  - id: PAG-001
+    title: List endpoints enforce a maximum page size
+    guidance: >-
+      Flag endpoints that return all rows or accept an unbounded limit
+      parameter. Require a capped default and maximum.
+    severity: medium
+  - id: PAG-002
+    title: Pagination parameters validated
+    guidance: >-
+      Confirm limit/offset/cursor are validated (type, range) and cannot be
+      negative or excessive.
+    severity: low
+  - id: PAG-003
+    title: Pagination respects authorization scope
+    guidance: >-
+      Confirm paginated queries remain scoped to the caller's
+      tenant/ownership. See authorization pack.
+    severity: high
+  - id: PAG-004
+    title: Cursor/token pagination is not guessable across users
+    guidance: >-
+      Flag cursors that encode sequential/global ids allowing enumeration.
+    severity: medium

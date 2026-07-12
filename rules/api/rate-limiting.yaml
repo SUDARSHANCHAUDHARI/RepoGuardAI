@@ -1,0 +1,55 @@
+pack: rate-limiting
+category: rate-limiting
+description: >-
+  Verify that abuse-prone operations are rate limited, that limits are enforced
+  server-side after identifying the caller, and that common bypasses are
+  closed.
+sensitiveOperations:
+  - login
+  - registration
+  - password-reset
+  - otp-generation
+  - otp-verification
+  - email-verification
+  - api-token-generation
+  - file-upload
+  - search
+  - export-generation
+  - report-generation
+  - ai-endpoints
+  - webhook-endpoints
+  - graphql-endpoints
+  - expensive-database-queries
+  - public-apis
+  - admin-apis
+checks:
+  - id: RL-001
+    title: Sensitive operations have a server-side limiter
+    guidance: >-
+      For each operation above, confirm a limiter is applied at the route or
+      router, with a defined scope (ip/user/key) and threshold.
+    severity: high
+  - id: RL-002
+    title: Limits keyed after caller identification
+    guidance: >-
+      Flag limiters applied before authentication when per-user limiting is
+      intended, or keyed on spoofable identifiers.
+    severity: medium
+  - id: RL-003
+    title: Distributed deployments use shared storage
+    guidance: >-
+      Flag in-memory counters in horizontally-scaled services; require shared
+      store (e.g. Redis).
+    severity: high
+bypasses:
+  - Changing X-Forwarded-For or other client-supplied proxy headers
+  - IPv6 address rotation (limiting a full /128 instead of a prefix)
+  - Rotating across multiple API keys or accounts
+  - Changing route case, trailing slash, or encoding
+  - Using an alternate endpoint that reaches the same handler
+  - Distributed deployment without shared counter storage
+  - Rate limits applied before user identification
+  - Limits enforced only in the frontend
+  - WebSocket messages that bypass HTTP-layer limits
+  - GraphQL query batching / multiple operations per request
+  - Multiple requests inside one batch endpoint

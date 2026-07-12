@@ -1,0 +1,32 @@
+pack: test-coverage
+category: test-coverage
+description: >-
+  Assess whether critical and security-sensitive paths are covered by
+  automated tests. Absence of tests is a risk, not a vulnerability by itself.
+checks:
+  - id: TEST-001
+    title: A test framework is present and wired
+    guidance: >-
+      Confirm a test framework exists and tests run. Flag repos with no tests
+      as a high-priority gap.
+    severity: medium
+  - id: TEST-002
+    title: Auth and authorization paths are tested
+    guidance: >-
+      Confirm tests cover authentication, authorization, and tenant-isolation
+      boundaries.
+    severity: medium
+  - id: TEST-003
+    title: Input validation and error paths are tested
+    guidance: Flag validation/error branches with no negative tests.
+    severity: low
+  - id: TEST-004
+    title: Money/state-mutating logic is tested
+    guidance: >-
+      Confirm tests exist for payments, quotas, and other correctness-critical
+      mutations.
+    severity: medium
+  - id: TEST-005
+    title: Regression tests exist for known fixes
+    guidance: Recommend a regression test accompany each confirmed finding's fix.
+    severity: informational

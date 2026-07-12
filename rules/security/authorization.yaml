@@ -1,0 +1,42 @@
+pack: authorization
+category: authorization
+description: >-
+  Verify that an authenticated principal may only perform actions and access
+  data they are permitted to. Authorization is distinct from authentication.
+checks:
+  - id: AUTHZ-001
+    title: Permission checks on every state-changing and data-reading route
+    guidance: >-
+      Authenticated is not authorized. Confirm an explicit permission/role
+      check exists per protected action.
+    severity: high
+  - id: AUTHZ-002
+    title: Object-level authorization (IDOR prevention)
+    guidance: >-
+      Where an object id comes from user input, confirm ownership/access is
+      checked before returning or mutating it.
+    severity: high
+  - id: AUTHZ-003
+    title: No privilege escalation via mass assignment
+    guidance: >-
+      Role/permission/tenant fields must not be settable through unfiltered
+      request bodies (mass assignment / over-posting).
+    severity: high
+  - id: AUTHZ-004
+    title: Tenant isolation enforced in multi-tenant systems
+    guidance: >-
+      Every query must be scoped to the caller's tenant. Flag queries that omit
+      a tenant/org filter.
+    severity: critical
+  - id: AUTHZ-005
+    title: Admin routes gated by admin checks
+    guidance: >-
+      Admin/privileged endpoints must require the privileged role, not merely
+      authentication.
+    severity: high
+  - id: AUTHZ-006
+    title: Authorization enforced server-side, never in the client
+    guidance: >-
+      Client-side hiding of actions is not enforcement. Confirm the server
+      rejects unauthorized calls.
+    severity: medium

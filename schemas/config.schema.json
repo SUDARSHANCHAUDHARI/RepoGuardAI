@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://repoguard.ai/schemas/config.schema.json",
+  "title": "RepoGuard Configuration",
+  "description": "Schema for repoguard.config.yaml. Every key is optional; omitted keys use defaults. Mirrors src/schemas.ts (Zod).",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "project": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "default": "auto" },
+        "repository": { "type": "string", "default": "." }
+      }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "bugs": { "type": "boolean", "default": true },
+        "security": { "type": "boolean", "default": true },
+        "apiSecurity": { "type": "boolean", "default": true },
+        "rateLimiting": { "type": "boolean", "default": true },
+        "dependencies": { "type": "boolean", "default": true },
+        "configuration": { "type": "boolean", "default": true },
+        "tests": { "type": "boolean", "default": true }
+      }
+    },
+    "mode": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "modifyFiles": { "type": "boolean", "default": false },
+        "validateFindings": { "type": "boolean", "default": true },
+        "minimumConfidence": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 75
+        }
+      }
+    },
+    "exclude": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": ["node_modules", "dist", "build", "coverage", "vendor", ".git"]
+    },
+    "report": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": { "type": "string", "enum": ["markdown", "json", "sarif"] },
+          "default": ["markdown", "json", "sarif"]
+        },
+        "outputDirectory": { "type": "string", "default": "repoguard-results" }
+      }
+    },
+    "scanners": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "disabled": { "type": "array", "items": { "type": "string" }, "default": [] },
+        "timeoutMs": { "type": "integer", "minimum": 1, "default": 120000 }
+      }
+    },
+    "discovery": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "maxFiles": { "type": "integer", "minimum": 1, "default": 200000 },
+        "maxEndpointScanFiles": { "type": "integer", "minimum": 1, "default": 5000 }
+      }
+    }
+  }
+}

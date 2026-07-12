@@ -1,0 +1,30 @@
+pack: bugs
+category: bug
+description: >-
+  Functional defects that cause incorrect behaviour, crashes, or data
+  corruption. Require a concrete trigger condition and code evidence.
+checks:
+  - id: BUG-001
+    title: Null/undefined dereference
+    guidance: Flag unchecked optionals and values that can be null at the use site.
+    severity: medium
+  - id: BUG-002
+    title: Off-by-one and boundary errors
+    guidance: Flag incorrect loop/index bounds and range handling.
+    severity: medium
+  - id: BUG-003
+    title: Inverted or incorrect conditionals
+    guidance: Flag logic whose branches do not match intent.
+    severity: medium
+  - id: BUG-004
+    title: Incorrect money/time/timezone/rounding handling
+    guidance: Flag float money math, naive timezone handling, and rounding errors.
+    severity: high
+  - id: BUG-005
+    title: Resource leaks
+    guidance: Flag unclosed files, sockets, or DB connections on all paths.
+    severity: medium
+  - id: BUG-006
+    title: Serialization/type coercion mismatches
+    guidance: Flag unsafe coercions and schema/parse mismatches.
+    severity: low

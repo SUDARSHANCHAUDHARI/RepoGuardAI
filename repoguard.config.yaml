@@ -1,0 +1,43 @@
+# RepoGuardAI configuration. See schemas/config.schema.json for all keys.
+# All keys are optional; this file documents the active defaults.
+
+project:
+  name: auto
+  repository: .
+
+audit:
+  bugs: true
+  security: true
+  apiSecurity: true
+  rateLimiting: true
+  dependencies: true
+  configuration: true
+  tests: true
+
+mode:
+  modifyFiles: false
+  validateFindings: true
+  minimumConfidence: 75
+
+exclude:
+  - node_modules
+  - dist
+  - build
+  - coverage
+  - vendor
+  - .git
+
+report:
+  formats:
+    - markdown
+    - json
+    - sarif
+  outputDirectory: repoguard-results
+
+scanners:
+  disabled: []
+  timeoutMs: 120000
+
+discovery:
+  maxFiles: 200000
+  maxEndpointScanFiles: 5000
