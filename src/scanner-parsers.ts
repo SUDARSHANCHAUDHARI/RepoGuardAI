@@ -175,6 +175,7 @@ function parsePnpmAudit(raw: string): Finding[] {
 function parseOsv(raw: string): Finding[] {
   const root = asRecord(parseJson(raw));
   const out: Finding[] = [];
+  const seen = new Set<string>();
   let n = 0;
   for (const res of asArray(root.results)) {
     for (const pkg of asArray(asRecord(res).packages)) {
@@ -183,10 +184,15 @@ function parseOsv(raw: string): Finding[] {
       for (const vuln of asArray(p.vulnerabilities)) {
         if (n >= MAX_PER_TOOL) break;
         const v = asRecord(vuln);
+        const key = [info.ecosystem, info.name, info.version, v.id]
+          .map(toStr)
+          .join(":");
+        if (seen.has(key)) continue;
+        seen.add(key);
         out.push(
           mk("OSV", ++n, {
             title: `${toStr(info.name)}@${toStr(info.version)}: ${toStr(v.id)}`,
-            severity: "medium",
+            severity: normSeverity(asRecord(v.database_specific).severity),
             category: "dependency",
             description: toStr(v.summary).slice(0, 300),
             evidence: toStr(v.id),

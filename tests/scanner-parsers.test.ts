@@ -74,8 +74,24 @@ describe("parseScannerFindings", () => {
           {
             packages: [
               {
-                package: { name: "left-pad", version: "1.0.0" },
-                vulnerabilities: [{ id: "GHSA-xxxx", summary: "bad" }],
+                package: { ecosystem: "npm", name: "left-pad", version: "1.0.0" },
+                vulnerabilities: [
+                  {
+                    id: "GHSA-xxxx",
+                    summary: "bad",
+                    database_specific: { severity: "LOW" },
+                  },
+                ],
+              },
+              {
+                package: { ecosystem: "npm", name: "left-pad", version: "1.0.0" },
+                vulnerabilities: [
+                  {
+                    id: "GHSA-xxxx",
+                    summary: "same advisory through another dependency path",
+                    database_specific: { severity: "LOW" },
+                  },
+                ],
               },
             ],
           },
@@ -85,6 +101,7 @@ describe("parseScannerFindings", () => {
     expect(osv).toHaveLength(1);
     expect(osv[0]!.title).toContain("left-pad");
     expect(osv[0]!.category).toBe("dependency");
+    expect(osv[0]!.severity).toBe("low");
 
     const trivy = parseScannerFindings(
       "trivy",
