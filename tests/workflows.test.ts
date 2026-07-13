@@ -71,6 +71,7 @@ describe("repository security automation", () => {
         schedule?: { interval?: string };
         cooldown?: { "default-days"?: number };
         "open-pull-requests-limit"?: number;
+        ignore?: Array<{ "update-types"?: string[] }>;
       }>;
     };
     expect(config.updates).toHaveLength(2);
@@ -81,6 +82,8 @@ describe("repository security automation", () => {
       .toBe(true);
     expect(config.updates.map((update) => update["open-pull-requests-limit"]))
       .toEqual([2, 1]);
+    expect(config.updates[0]?.ignore?.[0]?.["update-types"])
+      .toEqual(["version-update:semver-major"]);
   });
 
   it("pins every remote action in every workflow", () => {
