@@ -178,6 +178,26 @@ repoguard audit ../my-api --api
 repoguard fix RG-AUTH-001 ../my-api
 ```
 
+## Batch / portfolio scripts
+
+Helper scripts in [`scripts/`](scripts/) run RepoGuard across many repos at once.
+Point them at a directory that contains your repos (or category folders) via
+`REPOGUARD_ROOT` (defaults to the current directory):
+
+```bash
+# audit every repo under a directory, writing repoguard-results/ into each
+REPOGUARD_ROOT=~/code ./scripts/portfolio-audit.sh
+
+# safe, in-range dependency refresh (pnpm update + dedupe) + audit delta
+REPOGUARD_ROOT=~/code ./scripts/dependency-sweep.sh --criticals
+
+# AI deep-pass: have Claude Code validate seed findings into findings.json
+#   (restricted to read + write-file tools, per-repo $ budget cap)
+cd some-repo && ./scripts/claude-deep-pass.sh
+```
+
+These are optional convenience wrappers around the core `repoguard` CLI.
+
 ## Output layout
 
 ```

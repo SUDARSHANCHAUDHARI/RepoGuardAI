@@ -48,6 +48,15 @@
     "cli"
   ],
   "license": "MIT",
+  "author": "Sudarshan Chaudhari (SudarshanTechLabs)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SUDARSHANCHAUDHARI/RepoGuardAI.git"
+  },
+  "homepage": "https://github.com/SUDARSHANCHAUDHARI/RepoGuardAI#readme",
+  "bugs": {
+    "url": "https://github.com/SUDARSHANCHAUDHARI/RepoGuardAI/issues"
+  },
   "dependencies": {
     "commander": "^12.1.0",
     "yaml": "^2.9.0",

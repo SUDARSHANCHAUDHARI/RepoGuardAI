@@ -20,7 +20,7 @@
 
 set -uo pipefail
 
-ROOT="${REPOGUARD_ROOT:-$HOME/SUDARSHAN_CODE/sudarshan_repos}"
+ROOT="${REPOGUARD_ROOT:-$PWD}"
 BUDGET="${BUDGET:-0.75}"
 
 command -v claude    >/dev/null 2>&1 || { echo "claude CLI not found"; exit 1; }

@@ -15,16 +15,20 @@
 
 set -uo pipefail
 
-ROOT="${REPOGUARD_ROOT:-$HOME/SUDARSHAN_CODE/sudarshan_repos}"
+# Root directory that contains your category folders (each holding repos).
+# Defaults to the current directory; override with REPOGUARD_ROOT.
+ROOT="${REPOGUARD_ROOT:-$PWD}"
 
-# Categories to skip entirely (no code to audit).
-SKIP='Privacy Policies|SudarshanObsidian|graphify-out|.git|.claude|.agents|.wrangler|Config|Practice|Policies'
+# Category folder names to skip (no code to audit). Override with REPOGUARD_SKIP
+# (a '|'-separated list). Default skips common non-code dirs.
+SKIP="${REPOGUARD_SKIP:-.git|node_modules|.github}"
 
-# Locate the CLI: prefer the PATH command, fall back to the built dist.
+# Locate the CLI: prefer the PATH command, fall back to the built dist next to
+# this script (scripts/ lives beside dist/ in the RepoGuardAI package).
 if command -v repoguard >/dev/null 2>&1; then
   RG() { repoguard "$@"; }
 else
-  DIST="$HOME/SUDARSHAN_CODE/sudarshan_repos/AIProjects/RepoGuardAI/dist/cli.js"
+  DIST="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/dist/cli.js"
   RG() { node "$DIST" "$@"; }
 fi
 

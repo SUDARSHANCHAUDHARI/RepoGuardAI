@@ -12,7 +12,7 @@
 #   ./dependency-sweep.sh --criticals   # repos with >=1 critical in latest rollup
 
 set -uo pipefail
-ROOT="${REPOGUARD_ROOT:-$HOME/SUDARSHAN_CODE/sudarshan_repos}"
+ROOT="${REPOGUARD_ROOT:-$PWD}"
 command -v pnpm >/dev/null 2>&1 || { echo "pnpm not found"; exit 1; }
 
 repos=()
