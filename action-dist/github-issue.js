@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+import { createRequire as __rgCreateRequire } from 'module';
+const require = __rgCreateRequire(import.meta.url);
 var __defProp = Object.defineProperty;
 var __export = (target, all) => {
   for (var name in all)

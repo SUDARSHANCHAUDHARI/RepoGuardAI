@@ -33,5 +33,6 @@ export default defineConfig([
     sourcemap: false,
     splitting: false,
     noExternal: ["commander", "yaml", "zod"],
+    banner: { js: cliBanner },
   },
 ]);
