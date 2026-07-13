@@ -56,6 +56,13 @@ describe("repository security automation", () => {
   it("configures npm and GitHub Actions dependency updates", () => {
     expect(dependabot).toContain('package-ecosystem: "npm"');
     expect(dependabot).toContain('package-ecosystem: "github-actions"');
+    const config = parse(dependabot) as {
+      updates: Array<{ cooldown?: { "default-days"?: number } }>;
+    };
+    expect(config.updates).toHaveLength(2);
+    expect(
+      config.updates.every((update) => update.cooldown?.["default-days"] === 7),
+    ).toBe(true);
   });
 
   it("pins every remote action in every workflow", () => {

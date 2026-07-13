@@ -112,8 +112,9 @@ export function isToolAvailable(def: ScannerDef): boolean {
       timeout: 15_000,
       windowsHide: true,
     });
-    // ENOENT surfaces as res.error; any spawnable process (even non-zero) counts.
-    return res.error === undefined && res.status !== null;
+    // ENOENT surfaces as res.error. A non-zero probe means the installed tool
+    // is not usable in this environment and must not be selected for a scan.
+    return res.error === undefined && res.status === 0;
   } catch {
     return false;
   }

@@ -4210,6 +4210,7 @@ var configSchema = external_exports.object({
   exclude: external_exports.array(external_exports.string()).default([
     "node_modules",
     "dist",
+    "action-dist",
     "build",
     "out",
     "coverage",

@@ -6,6 +6,8 @@ updates:
       interval: "daily"
       time: "03:17"
       timezone: "Asia/Bangkok"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5
     groups:
       production-minor-patch:
@@ -21,4 +23,6 @@ updates:
       interval: "daily"
       time: "03:37"
       timezone: "Asia/Bangkok"
+    cooldown:
+      default-days: 7
     open-pull-requests-limit: 5

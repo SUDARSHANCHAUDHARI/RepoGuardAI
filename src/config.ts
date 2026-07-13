@@ -31,6 +31,7 @@ export function walkExcludes(config: RepoGuardConfig): string[] {
       outName,
       ".repoguard",
       ".repoguard-tool",
+      "action-dist",
       ".git",
     ]),
   ];
