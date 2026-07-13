@@ -1,0 +1,36 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
+
+const workflowPath = ".github/workflows/reusable-security.yml";
+const source = readFileSync(workflowPath, "utf8");
+const workflow = parse(source) as {
+  jobs: Record<string, { permissions?: Record<string, string> }>;
+};
+
+describe("reusable security workflow", () => {
+  it("is callable and keeps write permissions out of the scan job", () => {
+    expect(workflow).toHaveProperty("jobs");
+    expect(source).toContain("workflow_call:");
+    expect(workflow.jobs.scan?.permissions).toEqual({ contents: "read" });
+  });
+
+  it("pins every remote action to a full commit SHA", () => {
+    const remoteUses = [...source.matchAll(/uses:\s+([^\s#]+)/g)]
+      .map((match) => match[1]!)
+      .filter(
+        (value) => !value.startsWith("./") && !value.startsWith("docker://"),
+      );
+    expect(remoteUses.length).toBeGreaterThan(0);
+    for (const value of remoteUses) {
+      expect(value).toMatch(/@[0-9a-f]{40}$/);
+    }
+  });
+
+  it("uploads evidence before the explicit final gate", () => {
+    expect(source).toContain("if: always()");
+    expect(source.indexOf("Upload RepoGuard reports")).toBeLessThan(
+      source.indexOf("Apply final scan result"),
+    );
+  });
+});

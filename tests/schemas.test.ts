@@ -75,6 +75,7 @@ describe("configSchema", () => {
     expect(cfg.report.formats).toContain("sarif");
     expect(cfg.scanners.timeoutMs).toBeGreaterThan(0);
     expect(cfg.exclude).toContain("node_modules");
+    expect(cfg.exclude).toContain(".repoguard-tool");
     expect(cfg.audit.security).toBe(true);
     expect(cfg.mode.minimumConfidence).toBe(75);
   });

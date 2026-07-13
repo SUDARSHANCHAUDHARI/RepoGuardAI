@@ -4227,7 +4227,8 @@ var configSchema = external_exports.object({
     "Pods",
     "DerivedData",
     ".idea",
-    ".cache"
+    ".cache",
+    ".repoguard-tool"
   ]),
   report: external_exports.object({
     formats: external_exports.array(reportFormatSchema).default(["markdown", "json", "sarif"]),

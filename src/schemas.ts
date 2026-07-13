@@ -217,6 +217,7 @@ export const configSchema = z.object({
       "DerivedData",
       ".idea",
       ".cache",
+      ".repoguard-tool",
     ]),
   report: z
     .object({
