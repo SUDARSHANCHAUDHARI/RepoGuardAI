@@ -1,0 +1,28 @@
+name: RepoGuardAI Security Audit
+description: Run a read-only RepoGuardAI audit and preserve reports before applying a severity gate.
+inputs:
+  target:
+    description: Repository path to scan.
+    required: false
+    default: .
+  scope:
+    description: "Audit scope: full, security, or api."
+    required: false
+    default: security
+  fail-on:
+    description: Lowest active severity that fails after reports are written.
+    required: false
+    default: high
+outputs:
+  report-directory:
+    description: Directory containing generated reports.
+  json-report:
+    description: Path to the generated JSON report.
+  sarif-report:
+    description: Path to the generated SARIF report.
+runs:
+  using: node24
+  main: action-dist/action.js
+branding:
+  icon: shield
+  color: blue

@@ -25,7 +25,16 @@ export function walkExcludes(config: RepoGuardConfig): string[] {
   const outName =
     config.report.outputDirectory.split("/").filter(Boolean).pop() ??
     config.report.outputDirectory;
-  return [...new Set([...config.exclude, outName, ".repoguard", ".git"])];
+  return [
+    ...new Set([
+      ...config.exclude,
+      outName,
+      ".repoguard",
+      ".repoguard-tool",
+      "action-dist",
+      ".git",
+    ]),
+  ];
 }
 
 /**

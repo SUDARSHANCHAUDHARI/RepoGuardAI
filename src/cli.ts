@@ -8,6 +8,10 @@ import { collectEvidence } from "./evidence-collector.js";
 import { generateInstructions } from "./agent-instructions.js";
 import { buildAuditReport, renderFormat } from "./report-generator.js";
 import {
+  findingsAtOrAbove,
+  parseFailureThreshold,
+} from "./severity-gate.js";
+import {
   discoverySchema,
   evidenceSchema,
   findingsFileSchema,
@@ -22,6 +26,12 @@ import type {
 } from "./types.js";
 
 const AGENTS: AgentKind[] = ["codex", "claude", "cursor", "gemini", "generic"];
+
+type AuditOptions = {
+  security?: boolean;
+  api?: boolean;
+  failOn?: string;
+};
 
 const REPORT_FILE: Record<string, string> = {
   markdown: "audit-report.md",
@@ -272,7 +282,11 @@ program
   .argument("<repository>", "target repository path")
   .option("--security", "limit to security + dependency + config checks")
   .option("--api", "limit to API security + rate-limiting checks")
-  .action((repository: string, opts: { security?: boolean; api?: boolean }) => {
+  .option(
+    "--fail-on <severity>",
+    "exit 2 after reports when active findings meet critical|high|medium|low|informational|none",
+  )
+  .action((repository: string, opts: AuditOptions) => {
     const repo = resolveRepo(repository);
     const { config: base } = loadConfig(repo);
     const config = applyScope(base, opts);
@@ -316,6 +330,22 @@ program
     console.log(
       "  findings into findings.json, then run `repoguard report` (and `repoguard validate`).",
     );
+
+    if (opts.failOn) {
+      let threshold;
+      try {
+        threshold = parseFailureThreshold(opts.failOn);
+      } catch (error) {
+        fail(error instanceof Error ? error.message : String(error));
+      }
+      const blocking = findingsAtOrAbove(findings, threshold);
+      if (blocking.length > 0) {
+        console.error(
+          `✖ ${blocking.length} active finding(s) meet the ${threshold} failure threshold.`,
+        );
+        process.exitCode = 2;
+      }
+    }
   });
 
 program

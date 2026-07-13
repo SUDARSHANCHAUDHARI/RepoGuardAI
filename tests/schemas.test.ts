@@ -4,7 +4,7 @@ import {
   findingsFileSchema,
   configSchema,
 } from "../src/schemas.js";
-import { defaultConfig } from "../src/config.js";
+import { defaultConfig, walkExcludes } from "../src/config.js";
 
 describe("findingSchema", () => {
   const base = {
@@ -75,12 +75,23 @@ describe("configSchema", () => {
     expect(cfg.report.formats).toContain("sarif");
     expect(cfg.scanners.timeoutMs).toBeGreaterThan(0);
     expect(cfg.exclude).toContain("node_modules");
+    expect(cfg.exclude).toContain("action-dist");
+    expect(cfg.exclude).toContain(".repoguard-tool");
     expect(cfg.audit.security).toBe(true);
     expect(cfg.mode.minimumConfidence).toBe(75);
   });
 
   it("defaultConfig matches schema defaults", () => {
     expect(defaultConfig().report.outputDirectory).toBe("repoguard-results");
+  });
+
+  it("always excludes RepoGuard-owned generated directories", () => {
+    const cfg = defaultConfig();
+    cfg.exclude = [];
+
+    expect(walkExcludes(cfg)).toEqual(
+      expect.arrayContaining([".repoguard", ".repoguard-tool", "action-dist"]),
+    );
   });
 
   it("rejects minimumConfidence out of range", () => {

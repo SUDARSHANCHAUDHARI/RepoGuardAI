@@ -27,6 +27,16 @@ const fakeMissing: ScannerDef = {
   description: "probe",
 };
 
+const fakeBroken: ScannerDef = {
+  name: "broken-probe",
+  bin: process.execPath,
+  versionArgs: ["-e", "process.exit(2)"],
+  args: ["--version"],
+  appliesTo: () => true,
+  gate: "security",
+  description: "probe",
+};
+
 describe("isToolAvailable", () => {
   it("returns true for an installed binary (node)", () => {
     expect(isToolAvailable(fakeAvailable)).toBe(true);
@@ -34,6 +44,10 @@ describe("isToolAvailable", () => {
 
   it("returns false for a missing binary", () => {
     expect(isToolAvailable(fakeMissing)).toBe(false);
+  });
+
+  it("returns false when the binary version probe fails", () => {
+    expect(isToolAvailable(fakeBroken)).toBe(false);
   });
 });
 

@@ -4,6 +4,9 @@ node_modules/
 
 # Build output
 dist/
+action-dist/*.map
+!action-dist/
+!action-dist/*.js
 *.tsbuildinfo
 
 # Test / coverage
@@ -18,6 +21,7 @@ repoguard-results/
 .idea/
 .vscode/
 .claude/
+.worktrees/
 *.log
 
 # Env / secrets

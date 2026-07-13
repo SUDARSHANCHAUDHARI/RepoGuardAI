@@ -26,7 +26,7 @@ describe("collectEvidence", () => {
   it("runs in-house scanners and builds the API inventory", () => {
     const root = makeTempRepo({
       "package.json": JSON.stringify({ dependencies: { express: "^4.18.0" } }),
-      "config.js": `const secret = "${FAKE_AWS_KEY}";\nmodule.exports = { secret };\n`,
+      "config.js": `const credential = "${FAKE_AWS_KEY}";\nmodule.exports = { credential };\n`,
       "src/routes/auth.ts": "router.post('/api/login', (req, res) => res.end())\n",
     });
     repos.push(root);

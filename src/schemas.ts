@@ -199,6 +199,7 @@ export const configSchema = z.object({
     .default([
       "node_modules",
       "dist",
+      "action-dist",
       "build",
       "out",
       "coverage",
@@ -217,6 +218,7 @@ export const configSchema = z.object({
       "DerivedData",
       ".idea",
       ".cache",
+      ".repoguard-tool",
     ]),
   report: z
     .object({
