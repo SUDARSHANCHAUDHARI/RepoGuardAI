@@ -18,6 +18,7 @@ repoguard-results/
 .idea/
 .vscode/
 .claude/
+.worktrees/
 *.log
 
 # Env / secrets
