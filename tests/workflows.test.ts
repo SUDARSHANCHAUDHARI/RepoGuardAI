@@ -39,6 +39,13 @@ describe("reusable security workflow", () => {
     expect(source).not.toContain("OSV_OUTCOME:");
     expect(source).not.toContain("GITLEAKS_OUTCOME:");
   });
+
+  it("installs OSV for RepoGuard instead of running an independent OSV gate", () => {
+    expect(source).toContain(
+      "go install github.com/google/osv-scanner/cmd/osv-scanner@v1.9.2",
+    );
+    expect(source).not.toContain("google/osv-scanner-action/");
+  });
 });
 
 describe("repository security automation", () => {
