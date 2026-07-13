@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
@@ -32,5 +32,46 @@ describe("reusable security workflow", () => {
     expect(source.indexOf("Upload RepoGuard reports")).toBeLessThan(
       source.indexOf("Apply final scan result"),
     );
+  });
+});
+
+describe("repository security automation", () => {
+  const daily = readFileSync(".github/workflows/daily-security.yml", "utf8");
+  const codeql = readFileSync(".github/workflows/codeql.yml", "utf8");
+  const dependabot = readFileSync(".github/dependabot.yml", "utf8");
+
+  it("schedules the daily caller without pull_request_target", () => {
+    expect(daily).toContain('cron: "17 20 * * *"');
+    expect(daily).toContain(
+      "uses: ./.github/workflows/reusable-security.yml",
+    );
+    expect(daily).not.toContain("pull_request_target");
+  });
+
+  it("configures native JavaScript/TypeScript CodeQL", () => {
+    expect(codeql).toContain('language: ["javascript-typescript"]');
+    expect(codeql).toContain("security-extended");
+  });
+
+  it("configures npm and GitHub Actions dependency updates", () => {
+    expect(dependabot).toContain('package-ecosystem: "npm"');
+    expect(dependabot).toContain('package-ecosystem: "github-actions"');
+  });
+
+  it("pins every remote action in every workflow", () => {
+    const workflowSources = readdirSync(".github/workflows")
+      .filter((file) => file.endsWith(".yml") || file.endsWith(".yaml"))
+      .map((file) => readFileSync(`.github/workflows/${file}`, "utf8"));
+    for (const workflowSource of workflowSources) {
+      const remoteUses = [...workflowSource.matchAll(/uses:\s+([^\s#]+)/g)]
+        .map((match) => match[1]!)
+        .filter(
+          (value) =>
+            !value.startsWith("./") && !value.startsWith("docker://"),
+        );
+      for (const value of remoteUses) {
+        expect(value).toMatch(/@[0-9a-f]{40}$/);
+      }
+    }
   });
 });

@@ -1,0 +1,39 @@
+name: Daily Security
+
+on:
+  schedule:
+    - cron: "17 20 * * *" # 03:17 Asia/Bangkok (next day)
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "scanners/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "action.yml"
+      - ".github/**"
+  pull_request:
+    branches: [main]
+    paths:
+      - "src/**"
+      - "scanners/**"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - "action.yml"
+      - ".github/**"
+
+permissions:
+  contents: read
+  issues: write
+  security-events: write
+
+jobs:
+  security:
+    uses: ./.github/workflows/reusable-security.yml
+    with:
+      repoguard_ref: ${{ github.sha }}
+      scope: security
+      fail_on: high
+      upload_sarif: ${{ github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository }}
+      report_issues: ${{ github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || github.event_name == 'push' }}
