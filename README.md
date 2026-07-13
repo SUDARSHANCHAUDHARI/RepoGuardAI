@@ -341,16 +341,18 @@ adapter (`adapters/`) plus the shared prompt library and rule packs.
     sarif_file: repoguard-results/reports/audit-report.sarif
 ```
 
-This repo's own CI (`.github/workflows/ci.yml`) runs typecheck, tests, and build
-on Node 18/20/22 for every push and PR.
+This repo's own CI (`.github/workflows/ci.yml`) runs one Node 18 compatibility
+job with typecheck, tests, build, and committed-Action verification. Superseded
+runs on the same branch are cancelled.
 
 ## Daily GitHub security
 
-RepoGuardAI includes a packaged Node 24 Action and a reusable daily security
-workflow. It runs target code with read-only permissions, preserves reports
-before applying `--fail-on`, and isolates SARIF/issue writes in trusted jobs.
-Dependabot opens reviewable dependency PRs; RepoGuardAI does not automatically
-merge them or rewrite application code.
+RepoGuardAI includes a packaged Node 24 Action and a reusable security
+workflow. It does not schedule scans of itself; target repositories choose
+their own schedule and triggers. The workflow runs target code with read-only
+permissions, preserves reports before applying `--fail-on`, and isolates
+SARIF/issue writes in trusted jobs. Dependabot opens reviewable dependency PRs;
+RepoGuardAI does not automatically merge them or rewrite application code.
 
 See [GitHub Security Automation](docs/github-actions.md) for public/private
 callers, permissions, version pinning, troubleshooting, and the Website pilot.
@@ -411,7 +413,7 @@ Extend the design without touching unrelated code:
 - ✅ Parse external scanner JSON (semgrep, gitleaks, npm/pnpm audit, osv-scanner,
   trivy) into structured seed findings.
 - ✅ Packaged GitHub Action + `--fail-on <severity>` exit gate.
-- ✅ Reusable daily security workflow, Dependabot, CodeQL, and redacted issue
+- ✅ Reusable security workflow, weekly Dependabot, and redacted issue
   synchronization.
 - Route extractors for Python / Go / Rust / Java frameworks (currently Node only).
 - Config-declared custom scanners without code changes.
