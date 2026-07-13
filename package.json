@@ -61,7 +61,7 @@
     "url": "https://github.com/SUDARSHANCHAUDHARI/RepoGuardAI/issues"
   },
   "dependencies": {
-    "commander": "^12.1.0",
+    "commander": "^15.0.0",
     "yaml": "^2.9.0",
     "zod": "^3.25.76"
   },
