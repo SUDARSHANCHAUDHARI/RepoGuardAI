@@ -38,6 +38,7 @@ reasoning is delegated to whichever agent runs the generated instructions.
 - [What gets scanned](#what-gets-scanned)
 - [Supported agents](#supported-agents)
 - [CI / SARIF integration](#ci--sarif-integration)
+- [Daily GitHub security](#daily-github-security)
 - [Repository layout](#repository-layout)
 - [Development](#development)
 - [Safety guarantees](#safety-guarantees)
@@ -100,8 +101,10 @@ leads for the agent to prove or reject.
   visible — never a false claim).
 - 🧱 **Zod-validated** artifacts + JSON Schema mirrors.
 - 📄 **Markdown + JSON + SARIF** reports (upload SARIF to GitHub code scanning).
+- ⏱️ **Daily GitHub security** — reusable Semgrep, OSV, Gitleaks, SARIF, issue,
+  Dependabot, and CodeQL automation with least-privilege jobs.
 - 🛡️ **Read-only by default** — never modifies the repo under audit.
-- ✅ **Strict TypeScript**, 36 tests, CI on Node 18/20/22.
+- ✅ **Strict TypeScript**, 60 tests, CI on Node 18/20/22.
 
 ## Requirements
 
@@ -341,6 +344,17 @@ adapter (`adapters/`) plus the shared prompt library and rule packs.
 This repo's own CI (`.github/workflows/ci.yml`) runs typecheck, tests, and build
 on Node 18/20/22 for every push and PR.
 
+## Daily GitHub security
+
+RepoGuardAI includes a packaged Node 24 Action and a reusable daily security
+workflow. It runs target code with read-only permissions, preserves reports
+before applying `--fail-on`, and isolates SARIF/issue writes in trusted jobs.
+Dependabot opens reviewable dependency PRs; RepoGuardAI does not automatically
+merge them or rewrite application code.
+
+See [GitHub Security Automation](docs/github-actions.md) for public/private
+callers, permissions, version pinning, troubleshooting, and the Website pilot.
+
 ## Repository layout
 
 ```
@@ -396,8 +410,10 @@ Extend the design without touching unrelated code:
 
 - ✅ Parse external scanner JSON (semgrep, gitleaks, npm/pnpm audit, osv-scanner,
   trivy) into structured seed findings.
+- ✅ Packaged GitHub Action + `--fail-on <severity>` exit gate.
+- ✅ Reusable daily security workflow, Dependabot, CodeQL, and redacted issue
+  synchronization.
 - Route extractors for Python / Go / Rust / Java frameworks (currently Node only).
-- Packaged GitHub Action + `--fail-on <severity>` exit gate.
 - Config-declared custom scanners without code changes.
 - Diff-only audit mode for pull requests.
 
