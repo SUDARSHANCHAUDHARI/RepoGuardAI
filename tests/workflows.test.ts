@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync } from "node:fs";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
@@ -49,33 +49,38 @@ describe("reusable security workflow", () => {
 });
 
 describe("repository security automation", () => {
-  const daily = readFileSync(".github/workflows/daily-security.yml", "utf8");
-  const codeql = readFileSync(".github/workflows/codeql.yml", "utf8");
+  const ci = readFileSync(".github/workflows/ci.yml", "utf8");
   const dependabot = readFileSync(".github/dependabot.yml", "utf8");
 
-  it("schedules the daily caller without pull_request_target", () => {
-    expect(daily).toContain('cron: "17 20 * * *"');
-    expect(daily).toContain(
-      "uses: ./.github/workflows/reusable-security.yml",
-    );
-    expect(daily).not.toContain("pull_request_target");
+  it("keeps only CI as a repository-local triggered workflow", () => {
+    expect(existsSync(".github/workflows/daily-security.yml")).toBe(false);
+    expect(existsSync(".github/workflows/codeql.yml")).toBe(false);
   });
 
-  it("configures native JavaScript/TypeScript CodeQL", () => {
-    expect(codeql).toContain('language: ["javascript-typescript"]');
-    expect(codeql).toContain("security-extended");
+  it("runs one compatibility CI job and cancels superseded runs", () => {
+    expect(ci).toContain("node-version: 18");
+    expect(ci).not.toContain("matrix:");
+    expect(ci).toContain("cancel-in-progress: true");
   });
 
-  it("configures npm and GitHub Actions dependency updates", () => {
+  it("checks dependency updates weekly with small PR limits", () => {
     expect(dependabot).toContain('package-ecosystem: "npm"');
     expect(dependabot).toContain('package-ecosystem: "github-actions"');
     const config = parse(dependabot) as {
-      updates: Array<{ cooldown?: { "default-days"?: number } }>;
+      updates: Array<{
+        schedule?: { interval?: string };
+        cooldown?: { "default-days"?: number };
+        "open-pull-requests-limit"?: number;
+      }>;
     };
     expect(config.updates).toHaveLength(2);
     expect(
       config.updates.every((update) => update.cooldown?.["default-days"] === 7),
     ).toBe(true);
+    expect(config.updates.every((update) => update.schedule?.interval === "weekly"))
+      .toBe(true);
+    expect(config.updates.map((update) => update["open-pull-requests-limit"]))
+      .toEqual([2, 1]);
   });
 
   it("pins every remote action in every workflow", () => {
