@@ -19,3 +19,10 @@ export {
   buildLimitations,
 } from "./report-generator.js";
 export { INTERNAL_SCANNERS, buildApiInventory } from "../scanners/index.js";
+export {
+  FAILURE_THRESHOLDS,
+  findingsAtOrAbove,
+  parseFailureThreshold,
+  shouldFailAudit,
+} from "./severity-gate.js";
+export type { FailureThreshold } from "./severity-gate.js";
