@@ -33,6 +33,12 @@ describe("reusable security workflow", () => {
       source.indexOf("Apply final scan result"),
     );
   });
+
+  it("uses RepoGuard as the single normalized severity gate", () => {
+    expect(source).toContain('REPOGUARD_OUTCOME: ${{ steps.repoguard.outcome }}');
+    expect(source).not.toContain("OSV_OUTCOME:");
+    expect(source).not.toContain("GITLEAKS_OUTCOME:");
+  });
 });
 
 describe("repository security automation", () => {

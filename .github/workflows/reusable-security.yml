@@ -108,10 +108,8 @@ jobs:
         if: always()
         env:
           REPOGUARD_OUTCOME: ${{ steps.repoguard.outcome }}
-          OSV_OUTCOME: ${{ steps.osv.outcome }}
-          GITLEAKS_OUTCOME: ${{ steps.gitleaks.outcome }}
         run: |
-          if [ "$REPOGUARD_OUTCOME" != "success" ] || [ "$OSV_OUTCOME" != "success" ] || [ "$GITLEAKS_OUTCOME" != "success" ]; then
+          if [ "$REPOGUARD_OUTCOME" != "success" ]; then
             exit 1
           fi
 
