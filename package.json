@@ -10,6 +10,8 @@
   "types": "dist/index.d.ts",
   "files": [
     "dist",
+    "action-dist",
+    "action.yml",
     "prompts",
     "adapters",
     "rules",
@@ -33,6 +35,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "verify:action-dist": "pnpm build && git diff --exit-code -- action-dist",
     "dev": "tsx src/cli.ts",
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
