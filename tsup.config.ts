@@ -20,7 +20,10 @@ export default defineConfig([
     banner: { js: cliBanner },
   },
   {
-    entry: { action: "src/action.ts" },
+    entry: {
+      action: "src/action.ts",
+      "github-issue": "src/github-issue.ts",
+    },
     format: ["esm"],
     target: "node24",
     platform: "node",
