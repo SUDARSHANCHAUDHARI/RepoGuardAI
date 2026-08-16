@@ -1,5 +1,5 @@
 {
-  "name": "repoguardai",
+  "name": "@sudarshanchaudhari/repoguardai",
   "version": "0.1.0",
   "description": "Tool-independent repository auditing framework that guides coding agents to review any repo for bugs, security, API and rate-limiting issues, dependency risk, and missing tests.",
   "type": "module",
