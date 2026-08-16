@@ -129,7 +129,7 @@ git clone https://github.com/SUDARSHANCHAUDHARI/RepoGuardAI.git
 cd RepoGuardAI
 pnpm install
 pnpm build
-pnpm link --global   # optional: expose the `repoguard` binary globally
+pnpm link --global   # optional: expose the `repoguardai` binary globally
 ```
 
 Run without building during development:
@@ -142,29 +142,29 @@ pnpm dev -- discover ../some-repo   # tsx src/cli.ts discover ../some-repo
 
 ```bash
 # Full pipeline against a target repo
-repoguard audit /path/to/target-repo
+repoguardai audit /path/to/target-repo
 
 # Point your agent at the generated instructions, e.g. open in Claude Code:
 #   /path/to/target-repo/repoguard-results/instructions/claude-instructions.md
 # The agent validates findings and writes repoguard-results/findings.json
 
 # Then finalize:
-repoguard validate /path/to/target-repo
-repoguard report   /path/to/target-repo
+repoguardai validate /path/to/target-repo
+repoguardai report   /path/to/target-repo
 ```
 
 ## Command reference
 
 | Command | Description |
 | --- | --- |
-| `repoguard init [repo]` | Create the output workspace and a starter `repoguard.config.yaml`. |
-| `repoguard discover <repo>` | Detect stack, APIs, config; write `discovery.json`. |
-| `repoguard scan <repo> [--security] [--api]` | Run external + in-house scanners; write `evidence.json`. |
-| `repoguard instructions <repo> --agent <a>` | Generate instructions for `codex`, `claude`, `cursor`, `gemini`, or `generic`. |
-| `repoguard audit <repo> [--security] [--api]` | Full pipeline: discover → evidence → instructions → report. |
-| `repoguard validate [repo]` | Deterministic pass that reclassifies low-confidence potentials (< `minimumConfidence`). |
-| `repoguard report [repo]` | Rebuild `audit-report.{md,json,sarif}` from existing artifacts. |
-| `repoguard fix <finding-id> [repo]` | Generate a remediation plan for one finding (never edits code unless `mode.modifyFiles`). |
+| `repoguardai init [repo]` | Create the output workspace and a starter `repoguard.config.yaml`. |
+| `repoguardai discover <repo>` | Detect stack, APIs, config; write `discovery.json`. |
+| `repoguardai scan <repo> [--security] [--api]` | Run external + in-house scanners; write `evidence.json`. |
+| `repoguardai instructions <repo> --agent <a>` | Generate instructions for `codex`, `claude`, `cursor`, `gemini`, or `generic`. |
+| `repoguardai audit <repo> [--security] [--api]` | Full pipeline: discover → evidence → instructions → report. |
+| `repoguardai validate [repo]` | Deterministic pass that reclassifies low-confidence potentials (< `minimumConfidence`). |
+| `repoguardai report [repo]` | Rebuild `audit-report.{md,json,sarif}` from existing artifacts. |
+| `repoguardai fix <finding-id> [repo]` | Generate a remediation plan for one finding (never edits code unless `mode.modifyFiles`). |
 
 **Scope flags:** `--security` limits a run to security + dependency + config
 checks; `--api` limits it to API-security + rate-limiting checks. Both override
@@ -173,12 +173,12 @@ the `audit.*` toggles for that run only.
 ### Examples
 
 ```bash
-repoguard init
-repoguard discover .
-repoguard scan . --security
-repoguard instructions . --agent codex
-repoguard audit ../my-api --api
-repoguard fix RG-AUTH-001 ../my-api
+repoguardai init
+repoguardai discover .
+repoguardai scan . --security
+repoguardai instructions . --agent codex
+repoguardai audit ../my-api --api
+repoguardai fix RG-AUTH-001 ../my-api
 ```
 
 ## Batch / portfolio scripts
@@ -199,7 +199,7 @@ REPOGUARD_ROOT=~/code ./scripts/dependency-sweep.sh --criticals
 cd some-repo && ./scripts/claude-deep-pass.sh
 ```
 
-These are optional convenience wrappers around the core `repoguard` CLI.
+These are optional convenience wrappers around the core `repoguardai` CLI.
 
 ## Output layout
 
@@ -222,7 +222,7 @@ repoguard-results/
 │   ├── audit-report.json
 │   └── audit-report.sarif
 └── fixes/
-    └── <finding-id>.md                # from `repoguard fix`
+    └── <finding-id>.md                # from `repoguardai fix`
 ```
 
 ## Finding schema
@@ -328,14 +328,14 @@ adapter (`adapters/`) plus the shared prompt library and rule packs.
 | --- | --- |
 | **Codex** | `AGENTS.md`, `CODEX.md`, `repoguard-results/instructions/codex-instructions.md` |
 | **Claude Code** | `CLAUDE.md`, `AGENTS.md`, `repoguard-results/instructions/claude-instructions.md` |
-| **Others** | `repoguard instructions <repo> --agent generic` → one combined prompt |
+| **Others** | `repoguardai instructions <repo> --agent generic` → one combined prompt |
 
 ## CI / SARIF integration
 
 `audit-report.sarif` is SARIF 2.1.0 — upload it to GitHub code scanning:
 
 ```yaml
-- run: npx repoguard audit .
+- run: npx repoguardai audit .
 - uses: github/codeql-action/upload-sarif@v3
   with:
     sarif_file: repoguard-results/reports/audit-report.sarif
