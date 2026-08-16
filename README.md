@@ -357,6 +357,30 @@ RepoGuardAI does not automatically merge them or rewrite application code.
 See [GitHub Security Automation](docs/github-actions.md) for public/private
 callers, permissions, version pinning, troubleshooting, and the Website pilot.
 
+## Use as a GitHub Action
+
+Add RepoGuardAI to any workflow to run a read-only audit and gate on severity:
+
+```yaml
+name: RepoGuard audit
+on: [pull_request]
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: SUDARSHANCHAUDHARI/RepoGuardAI@v0.1.0
+        with:
+          target: .          # repository path to scan (default: .)
+          scope: security     # full | security | api (default: security)
+          fail-on: high       # lowest severity that fails the job (default: high)
+```
+
+Outputs: `report-directory`, `json-report`, and `sarif-report` (SARIF 2.1.0,
+ready for `github/codeql-action/upload-sarif`). Pin to a released tag such as
+`@v0.1.0`. See [GitHub Security Automation](docs/github-actions.md) for
+permissions, private callers, and version pinning.
+
 ## Repository layout
 
 ```
